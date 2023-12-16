@@ -1,0 +1,324 @@
+directive @goTag(
+    key: String!
+    value: String
+) repeatable on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+scalar Any
+scalar Map
+scalar Time
+
+type ProductResponse {
+    Meta: ProductMeta
+    Items: [ProductItem]
+}
+type ProductResponseV2 {
+    Meta: ProductMeta
+    Items: [LatestProductItems]
+}
+
+type LatestProductItems {
+  Draft: Draft
+  Id: String
+  Variants: [String]
+  Specs: [String]
+  PriceSchedule: NewProductPriceSchedule
+  Product: ProductItem
+}
+
+type Draft {
+  ID: String
+  Status: String
+  RejectionReason: String
+}
+type NewProductPriceSchedule {
+  OwnerID: String
+  ID: String
+  Name: String
+  ApplyTax: Boolean
+  ApplyShipping: Boolean
+  MinQuantity: Int
+  MaxQuantity: Int
+  UseCumulativeQuantity: Boolean
+  RestrictedQuantity: Boolean
+  Currency: String
+  SaleStart: String
+  SaleEnd: String
+  IsOnSale: Boolean
+  PriceBreaks: [PriceBreak]
+}
+
+type ProductMeta {
+    Facets : Any
+    Page : Int
+    PageSize : Int
+    TotalCount : Int
+    TotalPages : Int
+    ItemRange : [Int]
+    NextPageKey : String
+}
+
+type ProductItem {
+    OwnerID : String
+    DefaultPriceScheduleID : String
+    AutoForward : Boolean
+    ID : String
+    Name : String
+    Description : String
+    QuantityMultiplier : Int
+    ShipWeight : Float
+    ShipHeight : Float
+    ShipWidth : Float
+    ShipLength : Float
+    Active : Boolean
+    SpecCount : Int
+    VariantCount : Int
+    ShipFromAddressID : String
+    Inventory: Inventory
+    DefaultSupplierID : String
+    AllSuppliersCanSell : Boolean
+    Returnable : Boolean
+    XP : ProductXP
+    IsFavorite : Boolean!
+    PriceSchedule : PriceScheduleItem
+}
+
+type Inventory {
+    Enabled : Boolean
+    NotificationPoint : String
+    VariantLevelTracking : Boolean
+    OrderCanExceed : Boolean
+    QuantityAvailable : Int
+    LastUpdated : Time
+}
+
+type ProductXP {
+    Company: String
+    Status: String
+    ArtworkRequired: Boolean
+    ProductRegistrationNumber: String
+    Facets: ProductFacet
+    Manufacturer: String
+    FreeShipping: Boolean
+    UnitOfMeasure: UnitOfMeasure
+    Images: [ProductImage]
+    ProductType: String
+    CountryOfOrigin: String
+    PromotionEligible: Boolean
+    PromotionExists: Boolean
+    Workflow: Workflow
+    ProductBatch: ProductBatch
+    Tax: ProductTax
+    TherapeuticClass: String
+    HasVariants: Boolean
+    Accessorials: [String]
+    FreeShippingMessage: String
+    IsResale: Boolean
+    Brand: String
+    CustomerRating: String
+    SizeTier: String
+    IntegrationData: String
+    Notes: String
+    Currency: String
+    Documents: [ProductDocument]
+    Promotions: [ProductPromotions]
+    SupplierImage: String
+}
+
+type ProductPromotions {
+  ID: String
+  LineItemLevel: Boolean
+  Code: String
+  Name: String
+  RedemptionLimit: String
+  RedemptionLimitPerUser: Float
+  RedemptionCount: Int
+  Description: String
+  FinePrint: String
+  StartDate: String
+  ExpirationDate: String
+  EligibleExpression: String
+  ValueExpression: String
+  CanCombine: Boolean
+  AllowAllBuyers: Boolean
+  OwnerID: String
+  xp: ProductPromotionsXp
+}
+
+type GetBuySku {
+  SKU: String
+  Qty: String
+}
+
+type ProductPromotionsXpBogo {
+  Type: String
+  Value: String
+  GetSKU: GetBuySku
+  BuySKU: GetBuySku
+}
+
+type ProductPromotionsXpMinReq {
+  Type: String
+  Int: Int
+}
+
+type ProductPromotionsXp {
+  Type: String
+  Value: Int
+  AppliesTo: String
+  ScopeToSupplier: Boolean
+  Supplier: String
+  Automatic: Boolean
+  MaxShipCost: String
+  Buyers: [String]
+  BOGO: ProductPromotionsXpBogo
+  MinReq: ProductPromotionsXpMinReq
+  SKUs: [String]
+}
+
+
+type ProductFacet {
+    Supplier: [String]
+}
+
+type UnitOfMeasure {
+    Qty : Int
+    Unit : String
+}
+
+type ProductImage {
+    ThumbnailUrl : String
+    Url : String
+    Tags : [String]
+}
+
+type Workflow {
+    RejectionReasons : String
+}
+
+type ProductBatch {
+    BatchNumber : Any
+    BatchExpirationDate : String
+    BatchStockQuantity : Int
+}
+
+type ProductTax {
+    Description : String
+    LongDescription : String
+    Code : String
+}
+
+type ProductDocument {
+    FileName : String
+    Url : String
+}
+
+type PriceScheduleResponse {
+    Meta: OrderCloudMeta
+    Items: [PriceScheduleItem]
+}
+
+type OrderCloudMeta {
+    Page : Int
+    PageSize : Int
+    TotalCount : Int
+    TotalPages : Int
+    ItemRange : [Int]
+    NextPageKey : String
+}
+
+type PriceScheduleItem {
+    OwnerID : String
+    ID : String
+    Name : String
+    ApplyTax : Boolean
+    ApplyShipping : Boolean
+    MinQuantity : Int
+    MaxQuantity : Int
+    UseCumulativeQuantity : Boolean
+    RestrictedQuantity : Boolean
+    PriceBreaks : [PriceBreak]
+    Currency : String
+    SaleStart : String
+    SaleEnd : String
+    IsOnSale : Boolean
+    XP : PriceScheduleXP
+}
+
+type PriceBreak {
+    Quantity : Int
+    Price : Float
+    SalePrice : Float
+}
+
+type PriceScheduleXP {
+    Type : String
+}
+
+type CategoryResponse  {
+	Meta  :CategoryMeta!  
+	Items :[CategoryItems!]!
+}
+
+type CategoryMeta  {
+	Page        : Int!  
+	PageSize    : Int!     
+	TotalCount  : Int!       
+	TotalPages  : Int!        
+	ItemRange   : [Int]!     
+	NextPageKey : String!
+}
+
+type CategoryItems  {
+	ID          : String!     
+	Name        : String!      
+	Description : String!         
+	ListOrder   : Int!            
+	Active      : Boolean!       
+	ParentID    : String!        
+	ChildCount  : Int!           
+	Xp          : Any
+	ChildData   : [CategoryItems!]!
+}
+
+type UserProductFavorite {
+    ID: Int @goTag(key: "structs", value: "id") @goTag(key: "db", value: "id")
+    UserID: String @goTag(key: "structs", value: "user_id") @goTag(key: "db", value: "user_id")
+    ProductID: String @goTag(key: "structs", value: "product_id") @goTag(key: "db", value: "product_id")
+    CreatedAt: Time @goTag(key: "structs", value: "created_at") @goTag(key: "db", value: "created_at")
+}
+
+type TrendingProduct {
+    ProductID: String @goTag(key: "structs", value: "product_id") @goTag(key: "db", value: "product_id")
+    OrderCount: Int @goTag(key: "structs", value: "order_count") @goTag(key: "db", value: "order_count")
+    Quantity: Int @goTag(key: "structs", value: "quantity") @goTag(key: "db", value: "quantity")
+}
+
+type ProductFilter {
+  filterKey: String
+  filterCount: Int
+}
+
+type RecentSearch {
+    ID: Int @goTag(key: "structs", value: "id") @goTag(key: "db", value: "id")
+    UserID: String @goTag(key: "structs", value: "user_id") @goTag(key: "db", value: "user_id")
+    SearchKeyword: String @goTag(key: "structs", value: "search_keyword") @goTag(key: "db", value: "search_keyword")
+    CreatedAt: Time @goTag(key: "structs", value: "created_at") @goTag(key: "db", value: "created_at")
+}
+
+type Query {
+    productsV2(catalogID: String, categoryID: String, supplierID: String, isFavorite: Boolean, search: String, page: String, pageSize: String, sortBy: String, extraFilters: Map): ProductResponseV2
+    products(catalogID: String, categoryID: String, supplierID: String, isFavorite: Boolean, search: String, page: String, pageSize: String, sortBy: String, extraFilters: Map): ProductResponse
+    similarProducts(productID: String!, page: String, pageSize: String): ProductResponse
+    recommendProducts(productID: String!, page: String, pageSize: String): ProductResponseV2
+    product(id: String!): ProductItem
+    productV2(id: String!): LatestProductItems
+    priceSchedules(productID: String!, page: String, pageSize: String): PriceScheduleResponse
+    categories(catalogID: String, depth: String): CategoryResponse
+    trendingProducts: ProductResponse
+    getProductFilter(Search: String!): [ProductFilter]
+    recentSearches(page: String, pageSize: String): [RecentSearch]
+}
+
+type Mutation {
+    favoriteProduct(productID: String!, isFavorite: Boolean!): UserProductFavorite
+}

@@ -1,0 +1,19 @@
+steps:
+- task: Docker@2
+  displayName: Build the image 
+  inputs:
+    command: build
+    repository: $(appName)
+    containerRegistry: $(containerRegistry)
+    tags: |
+      $(imgTag)
+      latest
+- task: Docker@2
+  displayName: Push the image to container registry
+  inputs:
+    command: push
+    repository: $(appName)
+    containerRegistry: $(containerRegistry)
+    tags: |
+      $(imgTag)
+      latest

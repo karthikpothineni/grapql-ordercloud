@@ -1,0 +1,15 @@
+version: '2'
+services:
+  api:
+    container_name: be-api-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: be-api-dev
+    command: make dev
+    ports:
+      - 9512:9512
+    expose:
+      - 9512
+    volumes:
+     - .:/go/src/beAPIDev

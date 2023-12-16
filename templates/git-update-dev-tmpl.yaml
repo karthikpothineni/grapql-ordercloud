@@ -1,0 +1,13 @@
+  steps:
+  - task: Bash@3
+    displayName: DEV - Update values files with new image tag and push to the Git repo 
+    inputs:
+      targetType: 'inline'
+      script: |
+        git clone -b $(ado-branch) https://$(ado-token)@dev.azure.com/$(ado-project)/_git/$(ado-repo)
+        cd $(ado-repo)
+        git checkout $(ado-branch)
+        git config user.name "ADO Pipeline"
+        sed -i '0,/^\([[:space:]]*tag: *\).*/s//\1$(imgTag)/;' helm-charts/$(app-end)/$(appName)/$(value-file)
+        git commit -a -m 'Updated image tag to $(imgTag)'
+        git push -u https://$(ado-token)@dev.azure.com/$(ado-project)/_git/$(ado-repo) $(ado-branch)

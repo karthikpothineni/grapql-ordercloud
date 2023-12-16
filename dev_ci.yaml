@@ -1,0 +1,48 @@
+name: my-be-ci
+
+pr: none 
+
+trigger:
+  branches:
+    include:
+    - aks-dev
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+#build&push-env
+  containerRegistry:  'marketMY'
+  dirName:            'be'
+  appName:            'mpmy-product'
+  imgDate:            $[format('{0:yyyyMMddHH}', pipeline.startTime)]
+  imgTag:             'dev-$(Build.SourceVersion)'
+
+
+#git-env
+  ado-project:  'eZRx%20Backend'
+  ado-repo:     'eZRx-aks'
+  ado-branch:   'non-prod'
+  ado-token:    'lfallcfbci2smpcb6iyez6y7oihnu2t6gvynek5lm25shlguk3ua'
+  
+#app-env
+  app-end:    'sample-app/backend'
+  value-file: 'values_dev.yaml'
+
+stages:
+- stage: 'buildAndPush'
+  displayName: 'Build and Push'
+  jobs:
+  - job: Build
+    displayName: 'Build and Push'
+    steps:
+    - checkout: self
+      clean: true
+    - template: 'templates/build-and-push-tmpl.yaml'
+- stage: 'DEV_Update_Image_Tag_Helm_Chart'
+  displayName: 'DEV - Update Helm chart with new image tag, Git update and push stage'
+  jobs:
+  - job: Git_DEV
+    displayName: Git update and push
+    steps:
+    - template: 'templates/git-update-dev-tmpl.yaml'
